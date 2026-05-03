@@ -1,0 +1,106 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - ask_human
+  - view_ticket
+  - inform
+  - out_of_scope
+
+actions:
+  - action_transfer_to_human
+  - action_view_ticket
+
+
+responses:
+  utter_greet:
+  - text: "Bonjour! Comment puis-je vous aider ?"
+
+  utter_happy:
+  - text: "Bien!"
+
+  utter_goodbye:
+  - text: "Au revoir"
+
+  utter_iamabot:
+  - text: "Je suis un IA."
+
+  utter_propose_transfert:
+  - text: "Souhaitez-vous parler à un conseiller ?"
+    buttons:
+    - title: "Oui, s'il vous plaît"
+      payload: "/affirm"
+    - title: "Non, ça ira"
+      payload: "/deny"
+
+  utter_cheer_up:
+  - text: "Je suis désolé. Puis-je vous aider d'une autre manière?"
+
+  utter_did_that_help:
+  - text: "Est-ce que cela a aidé?"
+
+  utter_ticket_created:
+  - text: "Un ticket GLPI a été créé pour votre demande : {ticket_url}. Vous pouvez le consulter et le modifier si nécessaire."
+
+  utter_no_ticket:
+  - text: "Je n'ai pas encore créé de ticket pour vous. Souhaitez-vous ouvrir un ticket ?"
+
+  utter_ticket_status:
+  - text: "Voici votre ticket : {ticket_url}"
+
+  utter_ask_user_id:
+    - text: "J'ai besoin de votre identifiant utilisateur (ex: ID-12345) pour ouvrir le dossier."
+  utter_ask_ticket_details:
+    - text: "Pouvez-vous décrire précisément le problème technique ?"
+  utter_submit_ticket:
+    - text: "Parfait. J'ai préparé un brouillon avec votre ID ({user_id}). Souhaitez-vous le valider pour envoi ?"
+  utter_default:
+    - text: "Désolé, je n'ai pas compris. Pourriez-vous reformuler votre demande ?"
+    - text: "Je ne suis pas sûr de comprendre ce que vous voulez dire par là."
+  utter_ask_rephrase:
+    - text: "Je n'ai pas bien compris. Pourriez-vous reformuler votre problème ? "
+  utter_out_of_scope:
+    - text: "Désolé, je suis un assistant technique. Je ne peux pas répondre à cette question."
+
+
+slots:
+  glpi_ticket_url:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  user_id:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: user_id
+      - type: from_text
+        conditions:
+          - active_loop: ticket_form
+          
+  ticket_details:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: ticket_form
+          - active_loop: ticket_form
+
+entities:
+  - user_id
+
+forms:
+  ticket_form:
+    required_slots:
+      - user_id
+      - ticket_details
+

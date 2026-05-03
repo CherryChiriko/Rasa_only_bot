@@ -1,0 +1,27 @@
+version: "3.1"
+
+stories:
+
+- story: happy path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_great
+  - action: utter_happy
+
+- story: goodbye path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: direct human request
+  steps:
+  - intent: ask_human
+  - action: action_transfer_to_human
+
+- story: view existing ticket
+  steps:
+  - intent: view_ticket
+  - action: action_view_ticket
