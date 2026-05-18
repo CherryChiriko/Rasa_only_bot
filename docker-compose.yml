@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  # 3. THE RASA CORE (The Brain)
+  rasa-server:
+    image: rasa/rasa:3.6.21-full
+    container_name: rasa-server
+    restart: always
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./rasa_bot:/app
+    command: run --enable-api --cors "*"
+    depends_on:
+      - action-server

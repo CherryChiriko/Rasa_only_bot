@@ -1,0 +1,160 @@
+version: "3.1"
+nlu:
+- intent: greet
+  examples: |
+    - Salut
+    - Hello
+    - Bonjour
+    - Bonsoir
+    - Hey
+    - Bonsoir !
+    - Bonjour, j'ai besoin d'aide
+
+- intent: goodbye
+  examples: |
+    - Bonne journée
+    - Au revoir
+    - Bye
+    - Bonne soirée
+    - À plus tard
+    - À bientôt
+    - Merci, au revoir
+
+- intent: affirm
+  examples: |
+    - Oui
+    - C'est ça
+    - Exactement
+    - Absolument
+    - Bien sûr
+    - Oui, c'est correct
+    - Tout à fait
+    - Oui, soumettre
+
+- intent: deny
+  examples: |
+    - Non
+    - Pas du tout
+    - Pas vraiment
+    - Je ne pense pas
+    - Je ne crois pas
+    - Non, modifier
+    - Je veux changer quelque chose
+
+- intent: mood_great
+  examples: |
+    - Bien
+    - Magnifique
+    - Très bien
+    - Super
+    - Fantastique
+    - Génial
+    - Ça va très bien
+    - Parfait
+    - Je me sens super
+    - Je suis de bonne humeur
+    - Tout va bien
+    - Je suis content
+
+- intent: mood_unhappy
+  examples: |
+    - Pas bien
+    - Triste
+    - Mal
+    - Terrible
+    - Horrible
+    - Ça ne va pas
+    - Très mal
+    - Pas terrible
+
+- intent: bot_challenge
+  examples: |
+    - T'es un humain ou un bot ?
+    - Es-tu un bot ?
+    - Es-tu une IA ?
+    - Es-tu un assistant virtuel ?
+    - Es-tu un chatbot ?
+    - Qui es-tu ?
+
+- intent: report_problem
+  examples: |
+    - Mon pc ne marche pas
+    - J'ai un problème avec mon ordinateur
+    - Mon écran est noir
+    - Rien ne s'allume
+    - J'ai besoin d'aide technique
+    - J'ai un problème de connexion
+    - Ma carte réseau ne fonctionne pas
+    - Mon imprimante est en panne
+    - Le logiciel plante
+    - Mon compte est bloqué
+    - Je n'arrive pas à me connecter au VPN
+    - Je veux signaler un problème
+
+- intent: inform
+  examples: |
+    - Mon id est [12345](user_id)
+    - Mon identifiant est [67890](user_id)
+    - [AB-4521](user_id)
+    - Mon numéro est [99001](user_id)
+    - L'écran affiche une erreur
+    - Mon clavier ne répond plus
+    - Le message d'erreur dit "accès refusé"
+    - Ça se produit depuis ce matin
+    - Le problème survient au démarrage
+
+- intent: describe_problem
+  examples: |
+    - Mon écran reste noir après le démarrage
+    - Le logiciel se ferme tout seul
+    - Je reçois un message d'erreur 404
+    - L'application ne s'ouvre plus
+    - Mon clavier ne répond plus du tout
+    - La connexion WiFi se coupe toutes les cinq minutes
+    - Je n'arrive pas à imprimer
+    - Mon profil Windows est corrompu
+    - Le VPN refuse mes identifiants
+
+- intent: edit_ticket
+  examples: |
+    - Je veux modifier le ticket
+    - Changer la description
+    - Ce n'est pas correct
+    - Je veux corriger quelque chose
+    - Modifier mon identifiant
+    - Mettre à jour la description
+    - Non, je veux changer ça
+
+- intent: new_ticket
+  examples: |
+    - Créer un nouveau ticket
+    - J'ai un autre problème
+    - Signaler un autre incident
+    - Nouveau signalement
+    - Encore un problème
+
+- intent: out_of_scope
+  examples: |
+    - Je veux une recette de cuisine
+    - Quel temps fait-il ?
+    - Combien font 2+2 ?
+    - Parle-moi de la politique
+    - C'est quoi la capitale de la France ?
+
+- intent: inform_failure
+  examples: |
+    - Ce n'est pas utile
+    - Mauvaise réponse
+    - Tu n'as pas répondu à ma question
+    - C'est faux
+    - Nul
+    - Pas utile
+
+- intent: nlu_fallback
+  examples: |
+    - asdfghjkl
+    - qwertyuiop
+    - zzzzzzzzz
+    - hsfhgageda
+    - blabla gaga
+    - 1234567890

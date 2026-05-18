@@ -1,0 +1,83 @@
+version: "3.1"
+
+rules:
+
+- rule: Greet the user
+  steps:
+    - intent: greet
+    - action: utter_greet
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+    - intent: goodbye
+    - action: utter_goodbye
+
+- rule: Say I am a bot anytime the user challenges
+  steps:
+    - intent: bot_challenge
+    - action: utter_iamabot
+
+- rule: Handle off-topic questions
+  steps:
+    - intent: out_of_scope
+    - action: utter_out_of_scope
+
+- rule: Handle inform failure
+  steps:
+    - intent: inform_failure
+    - action: utter_inform_failure
+
+- rule: Handle low NLU confidence
+  steps:
+    - intent: nlu_fallback
+    - action: action_context_aware_fallback
+
+# --- Ticket Form Rules ---
+
+- rule: Activate ticket form on problem report
+  steps:
+    - intent: report_problem
+    - action: ticket_form
+    - active_loop: ticket_form
+
+- rule: Submit ticket form when all slots filled
+  condition:
+    - active_loop: ticket_form
+  steps:
+    - action: ticket_form
+    - active_loop: null
+    - slot_was_set:
+        - requested_slot: null
+    - action: utter_confirm_ticket
+
+- rule: User confirms ticket - submit it
+  condition:
+    - active_loop: null
+    - slot_was_set:
+        - user_id: true
+        - problem_description: true
+  steps:
+    - intent: affirm
+    - action: action_submit_ticket_draft
+    - action: utter_ticket_submitted
+
+- rule: User wants to edit ticket
+  condition:
+    - active_loop: null
+    - slot_was_set:
+        - user_id: true
+        - problem_description: true
+  steps:
+    - intent: deny
+    - action: utter_ticket_edit_prompt
+    - action: action_reset_ticket_slots
+    - action: ticket_form
+    - active_loop: ticket_form
+
+- rule: User wants a new ticket after submission
+  steps:
+    - intent: new_ticket
+    - action: utter_new_ticket_prompt
+    - action: action_reset_ticket_slots
+    - action: ticket_form
+    - active_loop: ticket_form

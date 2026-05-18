@@ -1,0 +1,126 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - out_of_scope
+  - report_problem
+  - inform
+  - describe_problem
+  - edit_ticket
+  - new_ticket
+  - inform_failure
+  - nlu_fallback
+
+entities:
+  - user_id
+  - problem_description
+
+slots:
+  user_id:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: user_id
+      # Accept any text (any intent, including nlu_fallback) when the form
+      # is active and specifically waiting for this slot.
+      - type: from_text
+        conditions:
+          - active_loop: ticket_form
+            requested_slot: user_id
+
+  problem_description:
+    type: text
+    influence_conversation: true
+    mappings:
+      # Same pattern: accept any text when the form is waiting for description.
+      - type: from_text
+        conditions:
+          - active_loop: ticket_form
+            requested_slot: problem_description
+
+  ticket_confirmed:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: true
+        conditions:
+          - active_loop: null
+      - type: from_intent
+        intent: deny
+        value: false
+        conditions:
+          - active_loop: null
+
+actions:
+  - action_submit_ticket_draft
+  - action_reset_ticket_slots
+  - action_context_aware_fallback
+  - validate_ticket_form
+
+forms:
+  ticket_form:
+    required_slots:
+      - problem_description
+      - user_id
+
+responses:
+  utter_greet:
+    - text: "Bonjour ! Je suis votre assistant technique. Comment puis-je vous aider aujourd'hui ?"
+
+  utter_happy:
+    - text: "Super ! N'hésitez pas si vous avez besoin d'aide."
+
+  utter_cheer_up:
+    - text: "Je suis désolé d'entendre ça. Puis-je faire quelque chose pour vous aider ?"
+
+  utter_did_that_help:
+    - text: "Est-ce que cela vous a aidé ?"
+
+  utter_goodbye:
+    - text: "Au revoir ! N'hésitez pas à revenir si vous avez besoin d'aide. 👋"
+
+  utter_iamabot:
+    - text: "Je suis un assistant virtuel IA dédié au support technique. Je ne suis pas humain, mais je ferai de mon mieux pour vous aider !"
+
+  utter_default:
+    - text: "Désolé, je n'ai pas bien compris. Pourriez-vous reformuler votre demande ?"
+    - text: "Je ne suis pas sûr de comprendre. Pouvez-vous préciser votre question ?"
+
+  utter_ask_rephrase:
+    - text: "Je n'ai pas bien compris. Pourriez-vous reformuler votre problème ?"
+
+  utter_out_of_scope:
+    - text: "Désolé, je suis un assistant technique. Je ne peux pas répondre à cette question, mais je peux vous aider à signaler un incident technique."
+
+  utter_inform_failure:
+    - text: "Je suis désolé de ne pas avoir pu vous aider correctement. Voulez-vous que je crée un ticket pour qu'un technicien vous rappelle ?"
+
+  utter_ask_user_id:
+    - text: "Quel est votre identifiant utilisateur ? (ex: 12345 ou AB-4521)"
+
+  utter_ask_problem_description:
+    - text: "Décrivez votre problème en détail. Plus c'est précis, plus le technicien pourra vous aider rapidement."
+
+  utter_submit:
+    - text: "Parfait, je prépare un brouillon de ticket pour le support technique..."
+
+  utter_confirm_ticket:
+    - text: "Voici le récapitulatif de votre ticket :\n\n👤 **ID utilisateur** : {user_id}\n📋 **Description** : {problem_description}\n\nSouhaitez-vous soumettre ce ticket, ou voulez-vous le modifier ?"
+
+  utter_ticket_submitted:
+    - text: "✅ Votre ticket a bien été soumis ! Un technicien va prendre en charge votre demande. Avez-vous un autre problème à signaler ?"
+
+  utter_ticket_edit_prompt:
+    - text: "D'accord, que souhaitez-vous modifier ? Vous pouvez me donner votre identifiant corrigé ou une nouvelle description du problème."
+
+  utter_new_ticket_prompt:
+    - text: "Bien sûr ! Décrivons votre nouveau problème. Je vais relancer le formulaire."

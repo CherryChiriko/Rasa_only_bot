@@ -1,3 +1,7 @@
-.rasa
+.rasa_env
 models
 rasa_env
+actions/__pycache__
+actions/__init__.py
+voice_app.py
+.rasa
