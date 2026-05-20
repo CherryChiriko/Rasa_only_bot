@@ -40,6 +40,8 @@ rules:
     - action: ticket_form
     - active_loop: ticket_form
 
+# When all slots are filled, fire the submit action directly.
+# No confirm step — Streamlit shows the editable form with Submit/Cancel buttons.
 - rule: Submit ticket form when all slots filled
   condition:
     - active_loop: ticket_form
@@ -48,36 +50,5 @@ rules:
     - active_loop: null
     - slot_was_set:
         - requested_slot: null
-    - action: utter_confirm_ticket
-
-- rule: User confirms ticket - submit it
-  condition:
-    - active_loop: null
-    - slot_was_set:
-        - user_id: true
-        - problem_description: true
-  steps:
-    - intent: affirm
+    - action: utter_submit
     - action: action_submit_ticket_draft
-    - action: utter_ticket_submitted
-
-- rule: User wants to edit ticket
-  condition:
-    - active_loop: null
-    - slot_was_set:
-        - user_id: true
-        - problem_description: true
-  steps:
-    - intent: deny
-    - action: utter_ticket_edit_prompt
-    - action: action_reset_ticket_slots
-    - action: ticket_form
-    - active_loop: ticket_form
-
-- rule: User wants a new ticket after submission
-  steps:
-    - intent: new_ticket
-    - action: utter_new_ticket_prompt
-    - action: action_reset_ticket_slots
-    - action: ticket_form
-    - active_loop: ticket_form

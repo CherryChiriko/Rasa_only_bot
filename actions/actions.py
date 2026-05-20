@@ -1,6 +1,10 @@
 import logging
 import uuid
 import re
+import functools
+import time
+import inspect
+import requests
 from typing import Any, Text, Dict, List, Optional
 from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
@@ -9,6 +13,56 @@ from rasa_sdk.types import DomainDict
 
 logger = logging.getLogger(__name__)
 
+def timed(cls):
+    """Class decorator that wraps run() and validate_* methods with timing logs."""
+    # 1. Wrap the run method
+    original_run = getattr(cls, "run", None)
+    if original_run:
+        if inspect.iscoroutinefunction(original_run):
+            @functools.wraps(original_run)
+            async def timed_run_async(self, dispatcher, tracker, domain):
+                t0 = time.perf_counter()
+                result = await original_run(self, dispatcher, tracker, domain)
+                elapsed = (time.perf_counter() - t0) * 1000
+                logger.info("[TIMING] %s.run() took %.1f ms (async)", cls.__name__, elapsed)
+                return result
+            cls.run = timed_run_async
+        else:
+            @functools.wraps(original_run)
+            def timed_run_sync(self, dispatcher, tracker, domain):
+                t0 = time.perf_counter()
+                result = original_run(self, dispatcher, tracker, domain)
+                elapsed = (time.perf_counter() - t0) * 1000
+                logger.info("[TIMING] %s.run() took %.1f ms (sync)", cls.__name__, elapsed)
+                return result
+            cls.run = timed_run_sync
+ 
+    # 2. Wrap validation methods
+    for attr_name in list(vars(cls)):
+        if attr_name.startswith("validate_"):
+            original_fn = getattr(cls, attr_name)
+            if callable(original_fn):
+                def _make(fn, name):
+                    if inspect.iscoroutinefunction(fn):
+                        @functools.wraps(fn)
+                        async def timed_validate_async(self, slot_value, dispatcher, tracker, domain):
+                            t0 = time.perf_counter()
+                            result = await fn(self, slot_value, dispatcher, tracker, domain)
+                            elapsed = (time.perf_counter() - t0) * 1000
+                            logger.info("[TIMING] %s.%s() took %.1f ms (async)", cls.__name__, name, elapsed)
+                            return result
+                        return timed_validate_async
+                    else:
+                        @functools.wraps(fn)
+                        def timed_validate_sync(self, slot_value, dispatcher, tracker, domain):
+                            t0 = time.perf_counter()
+                            result = fn(self, slot_value, dispatcher, tracker, domain)
+                            elapsed = (time.perf_counter() - t0) * 1000
+                            logger.info("[TIMING] %s.%s() took %.1f ms (sync)", cls.__name__, name, elapsed)
+                            return result
+                        return timed_validate_sync
+                setattr(cls, attr_name, _make(original_fn, attr_name))
+    return cls
 # --- Friendly & Contextual Fallbacks ---
 _FALLBACK_MESSAGES: Dict[Optional[str], str] = {
     "user_id": (
@@ -25,7 +79,7 @@ _FALLBACK_MESSAGES: Dict[Optional[str], str] = {
     ),
 }
 
-
+@timed
 class ActionContextAwareFallback(Action):
     """
     Replaces the generic utter_ask_rephrase.
@@ -47,7 +101,7 @@ class ActionContextAwareFallback(Action):
         dispatcher.utter_message(text=message)
         return []
 
-
+@timed
 class ValidateTicketForm(FormValidationAction):
     """Validates slot values as they are filled during the ticket form."""
 
@@ -101,7 +155,7 @@ class ValidateTicketForm(FormValidationAction):
         )
         return {"problem_description": None}
 
-
+@timed
 class ActionSubmitTicketDraft(Action):
     def name(self) -> Text:
         return "action_submit_ticket_draft"
@@ -128,7 +182,7 @@ class ActionSubmitTicketDraft(Action):
         dispatcher.utter_message(text=response_string)
         return []
 
-
+@timed
 class ActionResetTicketSlots(Action):
     def name(self) -> Text:
         return "action_reset_ticket_slots"
