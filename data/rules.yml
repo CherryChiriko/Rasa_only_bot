@@ -40,8 +40,20 @@ rules:
     - action: ticket_form
     - active_loop: ticket_form
 
-# When all slots are filled, fire the submit action directly.
-# No confirm step — Streamlit shows the editable form with Submit/Cancel buttons.
+# --- Button trigger rules (called by Streamlit via /trigger_intent) ---
+
+# Fired when user clicks "❌ Annuler / Modifier par chat"
+- rule: Reset ticket on trigger
+  steps:
+    - intent: trigger_reset_ticket
+    - action: action_reset_ticket_slots
+    - active_loop: ticket_form
+
+# Fired when user clicks "🚀 Envoyer au technicien"
+- rule: Confirm ticket submitted on trigger
+  steps:
+    - intent: trigger_ticket_submitted
+    - action: action_ticket_submitted
 - rule: Submit ticket form when all slots filled
   condition:
     - active_loop: ticket_form

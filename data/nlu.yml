@@ -158,3 +158,14 @@ nlu:
     - hsfhgageda
     - blabla gaga
     - 1234567890
+
+# These are never typed by a user — they are triggered programmatically by
+# Streamlit via the /trigger_intent endpoint. One example each is enough;
+# Rasa won't train a classifier for intents only used in rules.
+- intent: trigger_reset_ticket
+  examples: |
+    - reset ticket
+
+- intent: trigger_ticket_submitted
+  examples: |
+    - ticket submitted

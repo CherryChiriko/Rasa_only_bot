@@ -14,6 +14,8 @@ intents:
   - describe_problem
   - inform_failure
   - nlu_fallback
+  - trigger_reset_ticket
+  - trigger_ticket_submitted
 
 entities:
   - user_id
@@ -42,15 +44,15 @@ slots:
 actions:
   - action_submit_ticket_draft
   - action_reset_ticket_slots
+  - action_ticket_submitted
   - action_context_aware_fallback
   - validate_ticket_form
 
 forms:
   ticket_form:
     required_slots:
-      - problem_description
       - user_id
-
+      - problem_description
 
 responses:
   utter_greet:
@@ -82,7 +84,7 @@ responses:
     - text: "Je suis désolé de ne pas avoir pu vous aider correctement. Voulez-vous que je crée un ticket pour qu'un technicien vous rappelle ?"
 
   utter_ask_user_id:
-    - text: "Quel est votre identifiant utilisateur ?"
+    - text: "Quel est votre identifiant utilisateur ? (ex: 12345 ou AB-4521)"
 
   utter_ask_problem_description:
     - text: "Décrivez votre problème en détail. Plus c'est précis, plus le technicien pourra vous aider rapidement."
@@ -91,4 +93,4 @@ responses:
     - text: "Parfait, je prépare votre ticket..."
 
   utter_new_ticket_prompt:
-    - text: "Bien sûr ! Décrivons votre nouveau problème."
+    - text: "Bien sûr ! Décrivez votre problème à nouveau."
