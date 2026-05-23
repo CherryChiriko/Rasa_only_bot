@@ -26,7 +26,7 @@ TEST_MESSAGES = [
     ("utter only (no action)",   "Bonjour"),
     ("rule action (fallback)",   "asdfghjkl"),
     ("form trigger",             "Mon pc ne marche pas"),
-    ("form slot fill (user_id)", "AB-1234"),
+    ("form slot fill (user_id)", "AB1234"),
     ("form slot fill (desc)",    "Mon ecran reste noir apres le demarrage"),
     ("affirm (submit)",          "Oui"),
 ]

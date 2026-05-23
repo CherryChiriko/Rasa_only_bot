@@ -90,13 +90,31 @@ nlu:
     - Mon compte est bloqué
     - Je n'arrive pas à me connecter au VPN
     - Je veux signaler un problème
+    - J'ai un autre problème
+    - J'ai un autre probleme
+    - J'ai un autre problème avec mon pc
+    - J'ai un autre probleme avec mon pc
+    - J'ai encore un problème
+    - J'ai encore un probleme
+    - J'ai de nouveau un problème
+    - Il y a un autre souci
+    - Autre problème
+    - Autre probleme
+    - J'ai un nouveau problème à signaler
+    - Il m'arrive autre chose
+    - Encore un souci
+    - Un autre truc ne marche pas
+    - Il y a aussi un problème avec
+    - Autre chose ne fonctionne pas
+    - Et j'ai aussi un problème
+    - Signaler un autre incident
 
 - intent: inform
   examples: |
-    - Mon id est [12345](user_id)
-    - Mon identifiant est [67890](user_id)
-    - [AB-4521](user_id)
-    - Mon numéro est [99001](user_id)
+    - Mon id est [XX345](user_id)
+    - Mon identifiant est [AA7890](user_id)
+    - [AB4521](user_id)
+    - Mon numéro est [AB9001](user_id)
     - L'écran affiche une erreur
     - Mon clavier ne répond plus
     - Le message d'erreur dit "accès refusé"
@@ -114,6 +132,11 @@ nlu:
     - Je n'arrive pas à imprimer
     - Mon profil Windows est corrompu
     - Le VPN refuse mes identifiants
+    - Mon imprimante affiche "bourrage papier" et n'imprime plus
+    - Je ne peux plus envoyer de mails depuis Outlook
+    - L'application interne plante quand j'essaie de me connecter
+    - Le poste se met en veille et ne redémarre plus correctement
+    - J'ai une erreur "accès refusé" sur le serveur partagé
 
 - intent: edit_ticket
   examples: |
@@ -129,9 +152,19 @@ nlu:
   examples: |
     - Créer un nouveau ticket
     - J'ai un autre problème
+    - J'ai un autre probleme
+    - J'ai encore un problème
+    - J'ai encore un probleme
+    - J'ai de nouveau un problème
+    - J'ai de nouveau un probleme
+    - J'ai un autre problème avec mon pc
+    - J'ai un autre probleme avec mon pc
     - Signaler un autre incident
     - Nouveau signalement
     - Encore un problème
+    - Un autre ticket
+    - Ouvrir un nouveau ticket
+    - Nouveau problème
 
 - intent: out_of_scope
   examples: |

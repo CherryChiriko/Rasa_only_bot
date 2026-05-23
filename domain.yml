@@ -32,14 +32,31 @@ slots:
           - active_loop: ticket_form
             requested_slot: user_id
 
+  # Silent slot — filled from the trigger message, never asked interactively.
+  # Provides device/topic context for assembling the final description.
+  trigger_context:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+        action: validate_ticket_form
+
+  # Accumulates all user detail messages as a JSON list so multi-message
+  # descriptions are handled correctly.
+  detail_messages:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+        action: validate_ticket_form
+
+  # Assembled from trigger_context + detail_messages by the extractor.
   problem_description:
     type: text
     influence_conversation: true
     mappings:
-      - type: from_text
-        conditions:
-          - active_loop: ticket_form
-            requested_slot: problem_description
+      - type: custom
+        action: validate_ticket_form
 
 actions:
   - action_submit_ticket_draft
@@ -51,8 +68,8 @@ actions:
 forms:
   ticket_form:
     required_slots:
-      - user_id
       - problem_description
+      - user_id
 
 responses:
   utter_greet:
@@ -81,16 +98,16 @@ responses:
     - text: "Désolé, je suis un assistant technique. Je ne peux pas répondre à cette question, mais je peux vous aider à signaler un incident technique."
 
   utter_inform_failure:
-    - text: "Je suis désolé de ne pas avoir pu vous aider correctement. Voulez-vous que je crée un ticket pour qu'un technicien vous rappelle ?"
+    - text: "Je suis désolé de ne pas avoir pu vous aider. Voulez-vous que je crée un ticket pour qu'un technicien vous rappelle ?"
 
   utter_ask_user_id:
-    - text: "Quel est votre identifiant utilisateur ? (ex: 12345 ou AB-4521)"
+    - text: "Quel est votre identifiant utilisateur ? (ex: AB4521)"
 
   utter_ask_problem_description:
-    - text: "Décrivez votre problème en détail. Plus c'est précis, plus le technicien pourra vous aider rapidement."
+    - text: "Décrivez-moi votre problème : quel appareil, quel symptôme, et depuis quand ?"
 
   utter_submit:
     - text: "Parfait, je prépare votre ticket..."
 
   utter_new_ticket_prompt:
-    - text: "Bien sûr ! Décrivez votre problème à nouveau."
+    - text: "Bien sûr ! Décrivons votre nouveau problème."
